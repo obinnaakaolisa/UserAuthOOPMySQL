@@ -10,7 +10,7 @@ class FormController extends UserAuth{
     public $gender;
 
     public function __construct(){
-        $this->db = new Dbh();
+        parent::__construct();
     }
 
     public function handleForm(){

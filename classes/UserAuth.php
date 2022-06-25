@@ -3,7 +3,7 @@ include_once 'Dbh.php';
 session_start();
 
 class UserAuth extends Dbh{
-    private static $db;
+    private $db;
 
     public function __construct(){
         $this->db = new Dbh();
