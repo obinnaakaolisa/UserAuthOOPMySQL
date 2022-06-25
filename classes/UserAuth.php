@@ -11,39 +11,34 @@ class UserAuth extends Dbh{
 
     public function register($fullname, $email, $password, $confirmPassword, $country, $gender){
         $conn = $this->db->connect();
-        if($this->confirmPasswordMatch($password, $confirmPassword)){
-            $sql = "INSERT INTO Students (`full_names`, `email`, `password`, `country`, `gender`) VALUES ('$fullname','$email', '$password', '$country', '$gender')";
-            if($conn->query($sql)){
-               echo "Ok";
-            } else {
-                echo "Opps". $conn->error;
-            }
+        if($this->validatePassword($password, $confirmPassword)){
+            if($this->checkEmailExist($email) === FALSE){
+                $sql = "INSERT INTO Students (`full_names`, `email`, `password`, `country`, `gender`) VALUES ('$fullname','$email', '$password', '$country', '$gender')";
+                if($conn->query($sql)){
+                   echo "Ok";
+                   header("refresh:0.5; url=forms/login.php");
+                } else echo "Oops". $conn->error; 
+            }else echo "User already exists! Please Login"; header("refresh:2; url=forms/login.php");
         }
-
-        
     }
 
     public function login($email, $password){
         $conn = $this->db->connect();
-        $sql = "SELECT * FROM Students WHERE email='$email' AND `password`='$password'";
+        $sql = "SELECT * FROM Students WHERE `email` ='$email' AND `password` = '$password'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             $_SESSION['email'] = $email;
             header("Location: ../dashboard.php");
-        } else {
-            header("Location: forms/login.php");
-        }
+        } else header("Location: forms/login.php");
     }
 
-    public function getUser($username){
+    public function getUser($email){
         $conn = $this->db->connect();
-        $sql = "SELECT * FROM users WHERE username = '$username'";
+        $sql = "SELECT * FROM Students WHERE email = '$email'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             return $result->fetch_assoc();
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     public function getAllUsers(){
@@ -83,46 +78,40 @@ class UserAuth extends Dbh{
 
     public function deleteUser($id){
         $conn = $this->db->connect();
-        $sql = "DELETE FROM Students WHERE id = '$id'";
+        $sql = "DELETE FROM Students WHERE `id` = '$id'";
         if($conn->query($sql) === TRUE){
-            header("refresh:0.5; url=action.php?all");
-        } else {
-            header("refresh:0.5; url=action.php?all=?message=Error");
+            header("refresh:0.5; url=dashboard.php");
+        } else header("refresh:0.5; url=action.php?all=?message=Error");
+    }
+
+    public function updateUser($email, $password){
+        $conn = $this->db->connect();
+        if($this->checkEmailExist($email)){
+            $sql = "UPDATE Students SET password = '$password' WHERE email = '$email'";
+            if($conn->query($sql) === TRUE){
+                header("Location: ../dashboard.php?update=success");
+            } else header("Location: forms/resetpassword.php?error=1");
         }
     }
 
-    public function updateUser($username, $password){
+    public function checkEmailExist($email){
         $conn = $this->db->connect();
-        $sql = "UPDATE users SET password = '$password' WHERE username = '$username'";
-        if($conn->query($sql) === TRUE){
-            header("Location: ../dashboard.php?update=success");
-        } else {
-            header("Location: forms/resetpassword.php?error=1");
-        }
-    }
-
-    public function getUserByUsername($username){
-        $conn = $this->db->connect();
-        $sql = "SELECT * FROM users WHERE username = '$username'";
+        $sql = "SELECT * FROM Students WHERE email = '$email'";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
-            return $result->fetch_assoc();
-        } else {
-            return false;
-        }
+            return true;
+        } else return false;
     }
 
-    public function logout($username){
+    public function logout($email){
         session_start();
         session_destroy();
         header('Location: index.php');
     }
 
-    public function confirmPasswordMatch($password, $confirmPassword){
+    public function validatePassword($password, $confirmPassword){
         if($password === $confirmPassword){
             return true;
-        } else {
-            return false;
-        }
+        } else return false;
     }
 }

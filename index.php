@@ -25,14 +25,9 @@
           </li>
       </div>
     </nav>
-    <div class="container justify-content-center" style="margin: auto;">
-        <h1 class="">Welcome to Zuri Student Management Portal with PHP and MySQL</h1>
-          <h1><div class="btn btn-warning" style="margin:auto">Discover More</div></h1>
-
-           
+    <div class="container justify-content-center" style="margin: auto; text-align:center">
+        <h1 class="" style="text-align:center">Welcome to Zuri Student Management Portal with PHP and MySQL</h1>
+        <h1><div class="btn btn-warning" style="margin:auto">Discover More</div></h1>
     </div>
-
-    
-   
 </body>
 </html>
