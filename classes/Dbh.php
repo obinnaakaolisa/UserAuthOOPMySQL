@@ -10,6 +10,4 @@ class Dbh {
         $conn = mysqli_connect($this->hostname, $this->username, $this->password, $this->dbname);
         if($conn) return $conn;
     }
-
-
 }

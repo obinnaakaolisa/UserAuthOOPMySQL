@@ -1,5 +1,5 @@
 <?php
-
+//action classes (handlers)
 require 'classes/Dbh.php';
 require 'classes/UserAuth.php';
 require 'classes/Route.php';

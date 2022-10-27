@@ -1,6 +1,6 @@
 <?php
 
-class FormController extends UserAuth{
+class FormController extends UserAuth {
     
     public $fullname;
     public $email;
@@ -9,11 +9,11 @@ class FormController extends UserAuth{
     public $country;
     public $gender;
 
-    public function __construct(){
+    public function __construct() {
         parent::__construct();
     }
 
-    public function handleForm(){
+    public function handleForm() {
         switch(true) {
             case isset($_POST['register']):
                 //unpack all data for registering
